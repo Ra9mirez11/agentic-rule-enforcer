@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic Rule Enforcer — App Map</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --heading: #f0f6fc;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --red: #f85149;
+      --yellow: #d29922;
+      --code-bg: #0d1117;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1, h2, h3 {
+      color: var(--heading);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.3em;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25em 0.6em;
+      font-size: 0.85em;
+      font-weight: 600;
+      border-radius: 4px;
+      background: var(--border);
+      color: var(--heading);
+    }
+    .badge-green { background: #238636; color: #fff; }
+    .badge-blue { background: #1f6feb; color: #fff; }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      background: var(--code-bg);
+      border-radius: 4px;
+    }
+    code {
+      padding: 0.2em 0.4em;
+      color: var(--accent);
+    }
+    pre {
+      padding: 1rem;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+    }
+    svg {
+      max-width: 100%;
+      height: auto;
+      margin: 1rem 0;
+    }
+    details {
+      margin-top: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      background: var(--card-bg);
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🛡️ Agentic Rule Enforcer — App Map</h1>
+    <p>A reference architecture map and reproducible guide for the <strong>Agentic Rule Enforcer</strong> proof of concept built during the Devpost <em>Build With AI: Basics</em> hackathon.</p>
+
+    <div class="card">
+      <h2>1. Plain-Language Overview</h2>
+      <p><strong>Agentic Rule Enforcer</strong> intercepts code produced by autonomous AI coding assistants before it gets committed. It parses human-readable Markdown policies from <code>agent_rules.md</code>, inspects target code line-by-line for high-risk patterns (secrets, terminal logs, scope leaks), generates interactive unified diffs for developer review, takes safety backups, and allows single-command rollback.</p>
+    </div>
+
+    <div class="card">
+      <h2>2. Architecture & Data Flow</h2>
+      <svg viewBox="0 0 850 180" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="20" width="130" height="70" rx="6" fill="#1f6feb" />
+        <text x="75" y="55" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">CLI Interface</text>
+        <text x="75" y="75" fill="#f0f6fc" font-size="11" text-anchor="middle">cli.py (scan / fix)</text>
+
+        <path d="M 140 55 L 180 55" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrow)" />
+
+        <rect x="180" y="20" width="140" height="70" rx="6" fill="#238636" />
+        <text x="250" y="50" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">Rule Parser</text>
+        <text x="250" y="70" fill="#f0f6fc" font-size="11" text-anchor="middle">agent_rules.md</text>
+
+        <path d="M 320 55 L 360 55" stroke="#58a6ff" stroke-width="2" />
+
+        <rect x="360" y="20" width="140" height="70" rx="6" fill="#8957e5" />
+        <text x="430" y="50" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">Scan Engine</text>
+        <text x="430" y="70" fill="#f0f6fc" font-size="11" text-anchor="middle">scanner.py</text>
+
+        <path d="M 500 55 L 540 55" stroke="#58a6ff" stroke-width="2" />
+
+        <rect x="540" y="20" width="140" height="70" rx="6" fill="#d29922" />
+        <text x="610" y="50" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">Remediator</text>
+        <text x="610" y="70" fill="#f0f6fc" font-size="11" text-anchor="middle">remediator.py (diff)</text>
+
+        <path d="M 680 55 L 720 55" stroke="#58a6ff" stroke-width="2" />
+
+        <rect x="720" y="20" width="120" height="70" rx="6" fill="#da3633" />
+        <text x="780" y="50" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">Backup Engine</text>
+        <text x="780" y="70" fill="#f0f6fc" font-size="11" text-anchor="middle">backup.py (rollback)</text>
+
+        <text x="425" y="140" fill="#8b949e" font-size="12" text-anchor="middle">Execution Flow: Input Target -> Parse Markdown Rules -> Pattern Scan -> Unified Diff Preview -> Safety Snapshot & Patch</text>
+      </svg>
+    </div>
+
+    <div class="card">
+      <h2>3. Code Tour & Key Navigation Stops</h2>
+      
+      <h3>Stop 1: Rulebook Parsing (<a href="../enforcer/parser.py" style="color: var(--accent);"><code>enforcer/parser.py</code></a>)</h3>
+      <p><strong>Anchor:</strong> <code>parse_rulebook_content(content: str)</code></p>
+      <p>Reads Markdown blocks starting with <code>### RULE-...</code> and dynamically extracts attributes (<code>Severity</code>, <code>Pattern</code>, <code>FileTypes</code>, <code>Fix</code>). Compiles raw regex strings into executable matchers.</p>
+
+      <h3>Stop 2: Codebase Scanning (<a href="../enforcer/scanner.py" style="color: var(--accent);"><code>enforcer/scanner.py</code></a>)</h3>
+      <p><strong>Anchor:</strong> <code>scan_file(file_path: Path, rules: List[Rule])</code></p>
+      <p>Evaluates applicable files line-by-line, isolates violations, extracts 1-indexed line numbers, surrounding context lines, and assigns automated fix blueprints.</p>
+
+      <h3>Stop 3: Interactive Diff & Remediation (<a href="../enforcer/remediator.py" style="color: var(--accent);"><code>enforcer/remediator.py</code></a>)</h3>
+      <p><strong>Anchor:</strong> <code>compute_file_fix(file_path: Path, violations: List[Violation])</code></p>
+      <p>Generates unified Git-style diffs using <code>difflib</code>. Sorts line edits in reverse order to prevent line-offset corruption, displays color-coded diffs, and requests developer confirmation before invoking <code>backup.py</code> and updating files.</p>
+    </div>
+
+    <div class="card">
+      <h2>4. "To Change This, Start Here"</h2>
+      <ul>
+        <li><strong>Add a new rule without writing code:</strong> Open <code>agent_rules.md</code> and append a new <code>### RULE-...</code> block.</li>
+        <li><strong>Change terminal colors or table layout:</strong> Inspect <code>enforcer/ui.py</code> (functions <code>colorize</code> and <code>render_scan_results</code>).</li>
+        <li><strong>Add a new auto-remediation pattern:</strong> Open <code>enforcer/remediator.py</code> and enhance <code>compute_file_fix</code>.</li>
+        <li><strong>Change snapshot backup location:</strong> Modify <code>BACKUP_ROOT</code> in <code>enforcer/backup.py</code>.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>5. A Practice to Reuse</h2>
+      <p><strong>Plan-First Verification:</strong> Defining observable acceptance criteria and small end-to-end slices before writing code guarantees that every component can be mechanically verified. By building the scanning and backup mechanisms before adding remediation, we eliminated the risk of destructive file modifications.</p>
+    </div>
+
+    <div class="card">
+      <h2>6. How to Run & Verify</h2>
+      <pre><code># 1. Initialize rulebook
+python -m enforcer.cli init
+
+# 2. View active rules
+python -m enforcer.cli rules
+
+# 3. Scan sample code
+python -m enforcer.cli scan examples/sample_agent_code.py
+
+# 4. Preview and apply safe fix
+python -m enforcer.cli fix examples/sample_agent_code.py
+
+# 5. Restore original state
+python -m enforcer.cli rollback
+
+# 6. Run all automated unit tests
+python -m unittest discover -s tests</code></pre>
+    </div>
+  </div>
+</body>
+</html>
