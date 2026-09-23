@@ -88,7 +88,7 @@ PRD ref: `prd.md > Screens and Layout`.
 
 ## File Structure
 ```
-F:\Devpost hackatano\
+agentic-rule-enforcer/
 ├── enforcer/
 │   ├── __init__.py          # Package initialization
 │   ├── cli.py               # Main CLI entrypoint and command router

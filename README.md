@@ -89,7 +89,7 @@ The enforcer automatically parses new `### RULE-...` sections and activates them
 ## 📂 Project Architecture
 
 ```
-F:\Devpost hackatano\
+agentic-rule-enforcer/
 ├── enforcer/
 │   ├── __init__.py          # Package metadata
 │   ├── cli.py               # Main CLI router (init, rules, scan, fix, rollback)
